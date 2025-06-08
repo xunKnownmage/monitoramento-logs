@@ -1,0 +1,25 @@
+name: Monitoramento de Logs
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # a cada 30 minutos
+  workflow_dispatch:
+
+jobs:
+  executar_script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Rodando script de logs
+        run: |
+          sudo apt update
+          sudo apt install -y python3
+          python3 monitoramento_logs.py
+
+      - name: Salvando CSV com logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs_csv
+          path: eventos_logs.csv
