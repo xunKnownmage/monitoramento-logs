@@ -1,11 +1,9 @@
-# monitoramento_logs.py
 import os
-import time
 import csv
 from datetime import datetime
 
 LOG_ARQUIVO = "eventos_logs.csv"
-ARQUIVOS_CRITICOS = ["/etc/passwd", "/etc/shadow"]
+ARQUIVO_TESTE = "teste.txt"
 
 def iniciar_arquivo():
     if not os.path.exists(LOG_ARQUIVO):
@@ -18,18 +16,14 @@ def registrar_evento(tipo, descricao):
         writer = csv.writer(csvfile)
         writer.writerow([datetime.now(), tipo, descricao])
 
-def checar_login_invalido():
-    try:
-        with open("/var/log/auth.log") as f:
-            for linha in f:
-                if "Failed password" in linha:
-                    registrar_evento("Login Inválido", linha.strip())
-    except:
-        registrar_evento("Aviso", "Arquivo auth.log não disponível.")
+def simular_eventos():
+    registrar_evento("Login Inválido", "Tentativa de login simulada no ambiente GitHub.")
+    
+    # Simula modificação de um arquivo de teste
+    with open(ARQUIVO_TESTE, "w") as f:
+        f.write("Arquivo modificado.")
+    registrar_evento("Arquivo Modificado", f"{ARQUIVO_TESTE} foi criado/modificado.")
 
-def checar_arquivos_modificados():
-    for caminho in ARQUIVOS_CRITICOS:
-        if os.path.exists(caminho):
-            tempo_modificacao = os.path.getmtime(caminho)
-            if tempo_modificacao > (time.time() - 60):
-                registrar_evento("Arquivo Modificado", f"{camin_
+if __name__ == "__main__":
+    iniciar_arquivo()
+    simular_eventos()
